@@ -1,0 +1,42 @@
+---
+# Write your playbook below.
+# Replace these contents with the tasks you'd like to complete and the modules you need.
+# For help getting started, check out https://www.redhat.com/en/topics/automation/what-is-an-ansible-playbook
+# Ansible playbook to automate the setup of a lamp stack on rocky linux server
+
+# Disable root SSH login for security
+- name: LAMP stack automation script - Disable Root SSH Login
+  hosts: 127.0.0.1
+  connection: local
+  become: true
+  tasks:
+   - name: PermitRootLogin set to no
+     ansible.builtin.lineinfile:
+       path: /etc/ssh/sshd_config
+       regexp: '^#?PermitRootLogin'
+       line: 'PermitRootLogin no'
+       state: present
+   - name: Restart sshd
+     ansible.builtin.service:
+      name: sshd
+      state: restarted
+
+- name: LAMP stack automation script - Firewall Ports and Reload
+  hosts: WEB-FINAL
+  become: true
+  tasks:
+   - name: Enable ports
+     ansible.posix.firewalld:
+      port: "{{ item }}/tcp"
+      permanent: true
+      state: enabled
+      loop:
+       - 80
+       - 443
+   - name: Reload firewalld
+     ansible.builtin.service:
+      name: firewalld
+      state: reloaded
+      enabled: yes
+
+- name: LAMP stack automation script - Install Apache, MariaDB
