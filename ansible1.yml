@@ -7,7 +7,7 @@
 # Disable root SSH login for security
 #fukass comment
 - name: LAMP stack automation script - Disable Root SSH Login
-  hosts: localhost
+  hosts: 192.168.1.15
   connection: local
   become: true
   tasks:
@@ -23,7 +23,7 @@
        state: restarted
 
 - name: LAMP stack automation script - Firewall Ports and Reload
-  hosts: localhost
+  hosts: 192.168.1.15
   become: true
   tasks:
    - name: Enable ports
@@ -36,7 +36,7 @@
       - 443
    - name: Reload firewalld
      ansible.builtin.service:
-       hosts: localhost
+       hosts: 192.168.1.15
        name: firewalld
        state: reloaded
        enabled: yes
