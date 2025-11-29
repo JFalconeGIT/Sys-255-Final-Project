@@ -5,6 +5,7 @@
 # Ansible playbook to automate the setup of a lamp stack on rocky linux server
 
 # Disable root SSH login for security
+#fukass comment
 - name: LAMP stack automation script - Disable Root SSH Login
   hosts: localhost
   connection: local
@@ -22,7 +23,7 @@
        state: restarted
 
 - name: LAMP stack automation script - Firewall Ports and Reload
-  hosts: 
+  hosts: localhost
   become: true
   tasks:
    - name: Enable ports
