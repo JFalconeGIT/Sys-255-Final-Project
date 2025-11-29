@@ -39,7 +39,7 @@
      ansible.builtin.service:
        name: firewalld
        state: reloaded
-       enabled: yes
+       enabled: true
 
 - name: LAMP stack automation script - Enable HTTPD
   hosts: 127.0.0.1
@@ -48,6 +48,6 @@
   tasks:
     - name: 
       ansible.builtin.service:
-        name: HTTPD
+        name: httpd
         state: started
-        enabled: yes
+        enabled: true
