@@ -18,8 +18,8 @@
        state: present
    - name: Restart sshd
      ansible.builtin.service:
-      name: sshd
-      state: restarted
+       name: sshd
+       state: restarted
 
 - name: LAMP stack automation script - Firewall Ports and Reload
   hosts: WEB-FINAL
@@ -27,16 +27,16 @@
   tasks:
    - name: Enable ports
      ansible.posix.firewalld:
-      port: "{{ item }}/tcp"
-      permanent: true
-      state: enabled
-      loop:
-       - 80
-       - 443
+       port: "{{ item }}/tcp"
+       permanent: true
+       state: enabled
+     loop:
+      - 80
+      - 443
    - name: Reload firewalld
      ansible.builtin.service:
-      name: firewalld
-      state: reloaded
-      enabled: yes
+       name: firewalld
+       state: reloaded
+       enabled: yes
 
 - name: LAMP stack automation script - Install Apache, MariaDB
