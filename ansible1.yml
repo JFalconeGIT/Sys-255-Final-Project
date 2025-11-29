@@ -22,7 +22,7 @@
        state: restarted
 
 - name: LAMP stack automation script - Firewall Ports and Reload
-  hosts: WEB-FINAL
+  hosts: 127.0.0.1
   become: true
   tasks:
    - name: Enable ports
