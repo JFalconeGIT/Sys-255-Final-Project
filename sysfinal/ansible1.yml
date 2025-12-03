@@ -60,4 +60,8 @@
   connection: local
   become: true
   tasks:
-    - name:
+    - name: Pulling html
+      ansible.builtin.get_url:
+        url: 'https://github.com/JFalconeGIT/Sys-255-Final-Project/blob/main/sysfinal/basicwebpage.html'
+        dest: '/var/www/html/index.html'
+        mode: '0644'
