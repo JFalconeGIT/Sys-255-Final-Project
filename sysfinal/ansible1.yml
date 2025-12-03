@@ -2,11 +2,13 @@
 # Write your playbook below.
 # Replace these contents with the tasks you'd like to complete and the modules you need.
 # For help getting started, check out https://www.redhat.com/en/topics/automation/what-is-an-ansible-playbook
-# Ansible playbook to automate the setup of a lamp stack on rocky linux server
+# Ansible playbook to automate the setup of a Website deployment on rocky linux server
 
 # Disable root SSH login for security
-- name: LAMP stack automation script - Disable Root SSH Login
-  hosts: WEB-FINAL
+#fukass comment
+- name: Website deployment automation script - Disable Root SSH Login
+  hosts: 127.0.0.1
+  connection: local
   become: true
   tasks:
    - name: PermitRootLogin set to no
@@ -15,31 +17,47 @@
        regexp: '^#?PermitRootLogin'
        line: 'PermitRootLogin no'
        state: present
-     notify: Restart sshd
+   - name: Restart sshd
+     ansible.builtin.service:
+       name: sshd
+       state: restarted
 
-     handlers:
-      - name: Restart sshd
-        ansible.builtin.service:
-         name: sshd
-         state: restarted
-
-- name: LAMP stack automation script - Open Firewall
-  hosts: WEB-FINAL
+- name: Website deployment automation script - Firewall Ports and Reload
+  hosts: 127.0.0.1
+  connection: local
   become: true
   tasks:
-   - name: Installing Apache/Enable ports
+   - name: Enable ports
      ansible.posix.firewalld:
-      port: "{{ item }}/tcp"
-      permanent: true
-      state: enabled
-      loop:
-       - 80
-       - 443
+       port: "{{ item }}/tcp"
+       permanent: true
+       state: enabled
+     loop:
+      - 80
+      - 443
+   - name: Reload firewalld
+     ansible.builtin.service:
+       name: firewalld
+       state: reloaded
+       enabled: true
 
-- name: Reload firewall
-  hosts: WEB-FINAL
+- name: Website deployment automation script - Install and Enable HTTPD
+  hosts: 127.0.0.1
+  connection: local
   become: true
   tasks:
-   ansible.buildin.service
-        name: firewalld
-        state: reloaded
+    - name: Install httpd package
+      ansible.builtin.yum:
+        name: httpd
+        state: present
+    - name: 
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: true
+- name: Website deployment automation script - pull website content from GitHub
+  hosts: 127.0.0.1
+  connection: local
+  become: true
+  tasks:
+    - name:
