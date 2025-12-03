@@ -62,6 +62,6 @@
   tasks:
     - name: moving html
       ansible.builtin.cp:
-        src: /home/champuser/sys/sysfinal/basicwebpage.html
+        src: /home/champuser/Sys-255-Final-Project/sysfinal/basicwebpage.html
         dest: /var/www/html/index.html
         mode: '0644'
