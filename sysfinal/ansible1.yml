@@ -60,8 +60,8 @@
   connection: local
   become: true
   tasks:
-    - name: moving html
-      ansible.builtin.cp:
+    - name: Moving basicwebpage.html to /var/www/html/
+      ansible.builtin.copy:
         src: /home/champuser/Sys-255-Final-Project/sysfinal/basicwebpage.html
         dest: /var/www/html/index.html
         mode: '0644'
