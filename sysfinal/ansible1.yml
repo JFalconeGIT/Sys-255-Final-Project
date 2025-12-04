@@ -191,3 +191,12 @@
       src: basicwebpage.html
       dest: /var/www/html/index.html
       mode: '0644'
+- name: last reload of httpd please GOD work so i can work on documentation
+  hosts: 127.0.0.1
+  connection: local
+  become: true
+  tasks: 
+  - name: reload
+    ansible.builtin.service:
+      name: httpd
+      state: reloaded
