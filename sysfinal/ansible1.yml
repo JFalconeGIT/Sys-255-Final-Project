@@ -61,14 +61,22 @@
   connection: local
   become: true
   tasks:
-    - name: Install MySQL server package
-      ansible.builtin.yum:
-        name: mysql-server
+    - name: Install pip3
+      ansible.builtin.package:
+        name:
+          - python3-pip
         state: present
     - name: Install PyMySQL dependency
       ansible.builtin.pip:
         name: PyMySQL
         executable: pip3
+    - name: Please use python so i can sleep
+      ansible.builtin.set_fact:
+       ansible_python_interpreter: /usr/bin/python3
+    - name: Install MySQL server package
+      ansible.builtin.yum:
+        name: mysql-server
+        state: present
     - name: Start and enable MySQL service
       ansible.builtin.service:
         name: mysqld
