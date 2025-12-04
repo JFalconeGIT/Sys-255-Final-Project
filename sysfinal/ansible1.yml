@@ -55,13 +55,148 @@
         name: httpd
         state: started
         enabled: true
-- name: Website deployment automation script - Move basicwebpage.html from github clone to /var/www/html/
+
+- name: Website deployment automation script - Install and Enable MySQL and MariaDB
   hosts: 127.0.0.1
   connection: local
   become: true
   tasks:
-    - name: Moving basicwebpage.html to /var/www/html/
-      ansible.builtin.copy:
-        src: /home/champuser/Sys-255-Final-Project/sysfinal/basicwebpage.html
-        dest: /var/www/html/index.html
-        mode: '0644'
+    - name: Install pip3
+      ansible.builtin.package:
+        name:
+          - python3-pip
+        state: present
+    - name: Install PyMySQL dependency
+      ansible.builtin.pip:
+        name: PyMySQL
+        executable: pip3
+    - name: Please use python so i can sleep
+      ansible.builtin.set_fact:
+       ansible_python_interpreter: /usr/bin/python3
+    - name: Install MySQL server package
+      ansible.builtin.yum:
+        name: mysql-server
+        state: present
+    - name: Start and enable MySQL service
+      ansible.builtin.service:
+        name: mysqld
+        state: started
+        enabled: true
+
+- name: Website deployment automation script - MySQL Secure Installation
+  hosts: 127.0.0.1
+  connection: local
+  become: true
+  vars:
+    mysql_root_password: "SavCone255!"
+  tasks: 
+    - name: Set MySQL root password
+      mysql_user:
+        name: root
+        host: localhost
+        password: "{{ mysql_root_password }}"
+        login_unix_socket: /var/lib/mysql/mysql.sock
+        state: present
+    - name: Remove Anon Users
+      mysql_user:
+        name: ''
+        host_all: yes
+        state: absent
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+    - name: Disable remote root login
+      mysql_user:
+        name: root
+        host: '%'
+        state: absent
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+    - name: Remove test database
+      mysql_db:
+        name: test
+        state: absent
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+
+- name: I forgot to install php so this is the task for it (part two i forgot to enable it so thats added as well)
+  hosts: 127.0.0.1
+  connection: local
+  become: true
+  tasks:
+    - name: Install php
+      ansible.builtin.yum:
+        name: 
+          - php
+          - php-mysqlnd
+        state: present
+    - name: Enable php
+      ansible.builtin.service:
+        name: php-fpm
+        state: started
+        enabled: true
+
+- name: We showin off tha SQL with this one (creating the database)
+  hosts: 127.0.0.1
+  connection: local
+  become: true
+  vars:
+    db_name: "lamp_stack_delicious_and_stuff"
+    db_user: "cuck"
+    db_pass: "cuckchair"
+    web_root: "/var/www/html"
+    mysql_root_password: "SavCone255!"
+  tasks:
+    - name: Create database pretty please and stuff
+      mysql_db:
+        name: "{{ db_name }}"
+        state: present
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+    - name: creating da user for database
+      mysql_user:
+        name: "{{ db_user }}"
+        password: "{{ db_pass }}"
+        priv: "{{ db_name }}.*:ALL"
+        state: present
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+    - name: Create guestbook table
+      mysql_query:
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        login_db: "{{ db_name }}"
+        query: |
+          CREATE TABLE IF NOT EXISTS guestbook (
+              id INT AUTO_INCREMENT PRIMARY KEY,
+              name VARCHAR(100),
+              message TEXT,
+              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          );
+    - name: Copy index.php
+      copy:
+        src: index.php
+        dest: "{{ web_root }}"
+    - name: Copy save.php
+      copy:
+        src: save.php
+        dest: "{{ web_root }}"
+- name: Website deployment automation script - Move basicwebpage.html from github clone to /var/www/html/
+  hosts: 127.0.0.1
+  connection: local
+  become: true
+
+  tasks:
+  - name: Moving basicwebpage.html to /var/www/html/
+    ansible.builtin.copy:
+      src: basicwebpage.html
+      dest: /var/www/html/index.html
+      mode: '0644'
+- name: last reload of httpd please GOD work so i can work on documentation
+  hosts: 127.0.0.1
+  connection: local
+  become: true
+  tasks: 
+  - name: reload
+    ansible.builtin.service:
+      name: httpd
+      state: reloaded
