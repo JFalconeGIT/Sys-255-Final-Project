@@ -129,7 +129,6 @@
           - php
           - php-mysqlnd
         state: present
-        enabled: true
 
 - name: We showin off tha SQL with this one (creating the database)
   hosts: 127.0.0.1
