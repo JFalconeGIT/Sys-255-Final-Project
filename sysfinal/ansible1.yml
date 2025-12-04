@@ -118,6 +118,52 @@
         login_user: root
         login_password: "{{ mysql_root_password }}"
 
+- name: We showin off tha SQL with this one (creating the database)
+  hosts: 127.0.0.1
+  connection: local
+  become: true
+  vars:
+    db_name: "lamp_stack_delicious_and_stuff"
+    db_user: "cuck"
+    db_pass: "cuckchair"
+    web_root: "/var/www/html"
+    mysql_root_password: "SavCone255!"
+  tasks:
+    - name: Create database pretty please and stuff
+      mysql_db:
+        name: "{{ db_name }}"
+        state: present
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+    - name: creating da user for database
+      mysql_user:
+        name: "{{ db_user }}"
+        password: "{{ db_pass }}"
+        priv: "{{ db_name }}.*:ALL"
+        state: present
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+    - name: Create guestbook table
+      mysql_query:
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        db: "{{ db_name }}"
+        query: |
+          CREATE TABLE IF NOT EXISTS guestbook (
+              id INT AUTO_INCREMENT PRIMARY KEY,
+              name VARCHAR(100),
+              message TEXT,
+              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          );
+    - name: Copy index.php
+      copy:
+        src: index.php
+        dest: "{{ web_root }}/index.php"
+    - name: Copy save.php
+      copy:
+        src: save.php
+        dest: "{{ web_root }}/save.php"
+
 - name: Website deployment automation script - Move basicwebpage.html from github clone to /var/www/html/
   hosts: 127.0.0.1
   connection: local
