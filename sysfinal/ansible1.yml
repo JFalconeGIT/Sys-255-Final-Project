@@ -118,6 +118,19 @@
         login_user: root
         login_password: "{{ mysql_root_password }}"
 
+- name: I forgot to install php so this is the task for it
+  hosts: 127.0.0.1
+  connection: local
+  become: true
+  tasks:
+    - name: Install php
+      ansible.builtin.yum:
+        name: 
+          - php
+          - php-mysqlnd
+        state: present
+        enabled: true
+
 - name: We showin off tha SQL with this one (creating the database)
   hosts: 127.0.0.1
   connection: local
@@ -172,5 +185,5 @@
   - name: Moving basicwebpage.html to /var/www/html/
     ansible.builtin.copy:
       src: /home/champuser/Sys-255-Final-Project/sysfinal/basicwebpage.html
-      dest: /var/www/html/basicwebpage.html
+      dest: /var/www/html/index.html
       mode: '0644'
