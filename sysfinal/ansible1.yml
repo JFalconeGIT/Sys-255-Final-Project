@@ -63,7 +63,7 @@
   tasks:
     - name: Install MySQL server package
       ansible.builtin.yum:
-        name: mysqlnd
+        name: mysql-server
         state: present
     - name: Install MariaDB
       ansible.builtin.yum:
@@ -75,7 +75,7 @@
         state: present
     - name: Start and enable MySQL service
       ansible.builtin.service:
-        name: mysqld
+        name: mysql-server
         state: started
         enabled: true
     - name: Start and enable MariaDB service
