@@ -65,22 +65,9 @@
       ansible.builtin.yum:
         name: mysql-server
         state: present
-    - name: Install MariaDB
-      ansible.builtin.yum:
-        name: mariadb
-        state: present
-    - name: Install MariaDB server package
-      ansible.builtin.yum:
-        name: mariadb-server
-        state: present
     - name: Start and enable MySQL service
       ansible.builtin.service:
         name: mysql-server
-        state: started
-        enabled: true
-    - name: Start and enable MariaDB service
-      ansible.builtin.service:
-        name: mariadb
         state: started
         enabled: true
 
