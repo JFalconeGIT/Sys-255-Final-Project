@@ -67,7 +67,7 @@
         state: present
     - name: Start and enable MySQL service
       ansible.builtin.service:
-        name: mysql-server
+        name: mysqld
         state: started
         enabled: true
 
