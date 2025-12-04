@@ -158,19 +158,19 @@
     - name: Copy index.php
       copy:
         src: index.php
-        dest: "{{ web_root }}/index.php"
+        dest: "{{ web_root }}"
     - name: Copy save.php
       copy:
         src: save.php
-        dest: "{{ web_root }}/save.php"
-
+        dest: "{{ web_root }}"
 - name: Website deployment automation script - Move basicwebpage.html from github clone to /var/www/html/
   hosts: 127.0.0.1
   connection: local
   become: true
+
   tasks:
-    - name: Moving basicwebpage.html to /var/www/html/
-      ansible.builtin.copy:
-        src: /home/champuser/Sys-255-Final-Project/sysfinal/basicwebpage.html
-        dest: /var/www/html/index.html
-        mode: '0644'
+  - name: Moving basicwebpage.html to /var/www/html/
+    ansible.builtin.copy:
+      src: /home/champuser/Sys-255-Final-Project/sysfinal/basicwebpage.html
+      dest: /var/www/html/basicwebpage.html
+      mode: '0644'
