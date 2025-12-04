@@ -65,6 +65,10 @@
       ansible.builtin.yum:
         name: mysql-server
         state: present
+    - name: Install PyMySQL dependency
+      ansible.builtin.pip:
+        name: PyMySQL
+        executable: pip3
     - name: Start and enable MySQL service
       ansible.builtin.service:
         name: mysqld
