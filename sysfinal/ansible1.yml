@@ -118,7 +118,7 @@
         login_user: root
         login_password: "{{ mysql_root_password }}"
 
-- name: I forgot to install php so this is the task for it
+- name: I forgot to install php so this is the task for it (part two i forgot to enable it so thats added as well)
   hosts: 127.0.0.1
   connection: local
   become: true
@@ -129,6 +129,11 @@
           - php
           - php-mysqlnd
         state: present
+    - name: Enable php
+      ansible.builtin.service:
+        name: php-fpm
+        state: started
+        enabled: true
 
 - name: We showin off tha SQL with this one (creating the database)
   hosts: 127.0.0.1
