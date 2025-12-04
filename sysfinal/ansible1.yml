@@ -55,6 +55,70 @@
         name: httpd
         state: started
         enabled: true
+
+- name: Website deployment automation script - Install and Enable MySQL and MariaDB
+  hosts: 127.0.0.1
+  connection: local
+  become: true
+  tasks:
+    - name: Install MySQL server package
+      ansible.builtin.yum:
+        name: mysqlnd
+        state: present
+    - name: Install MariaDB
+      ansible.builtin.yum:
+        name: mariadb
+        state: present
+    - name: Install MariaDB server package
+      ansible.builtin.yum:
+        name: mariadb-server
+        state: present
+    - name: Start and enable MySQL service
+      ansible.builtin.service:
+        name: mysqld
+        state: started
+        enabled: true
+    - name: Start and enable MariaDB service
+      ansible.builtin.service:
+        name: mariadb
+        state: started
+        enabled: true
+
+- name: Website deployment automation script - MySQL Secure Installation
+  hosts: 127.0.0.1
+  connection: local
+  become: true
+  vars:
+    mysql_root_password: "SavCone255!"
+  tasks: 
+    - name: Set MySQL root password
+      mysql_user:
+        name: root
+        host: localhost
+        password: "{{ mysql_root_password }}"
+        login_unix_socket: /var/lib/mysql/mysql.sock
+        state: present
+    - name: Remove Anon Users
+      mysql_user:
+        name: ''
+        host_all: yes
+        state: absent
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+    - name: Disable remote root login
+      mysql_user:
+        name: root
+        host: '%'
+        state: absent
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+    - name: Remove test database
+      mysql_db:
+        name: test
+        state: absent
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+
 - name: Website deployment automation script - Move basicwebpage.html from github clone to /var/www/html/
   hosts: 127.0.0.1
   connection: local
