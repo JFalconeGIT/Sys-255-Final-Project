@@ -56,7 +56,7 @@
         state: started
         enabled: true
 
-- name: Website deployment automation script - Install and Enable MySQL and MariaDB
+- name: Website deployment automation script - Install and Enable MySQL
   hosts: 127.0.0.1
   connection: local
   become: true
