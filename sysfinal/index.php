@@ -2,8 +2,8 @@
 # db connection config
 $host = "localhost";
 $db   = "lamp_stack_delicious_and_stuff";
-$user = "cuck";
-$pass = "cuckchair";
+$user = "cluck";
+$pass = "cluckchair";
 
 # create mysqli db connection object
 $conn = new mysqli($host, $user, $pass, $db);

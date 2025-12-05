@@ -141,8 +141,8 @@
   become: true
   vars:
     db_name: "lamp_stack_delicious_and_stuff"
-    db_user: "cuck"
-    db_pass: "cuckchair"
+    db_user: "cluck"
+    db_pass: "cluckchair"
     web_root: "/var/www/html"
     mysql_root_password: "SavCone255!"
   tasks:

@@ -2,8 +2,8 @@
 # database connection portion
 $host = "localhost";
 $db   = "lamp_stack_delicious_and_stuff";
-$user = "cuck";
-$pass = "cuckchair";
+$user = "cluck";
+$pass = "cluckchair";
 
 # new mysqli database connection
 $conn = new mysqli($host, $user, $pass, $db);
