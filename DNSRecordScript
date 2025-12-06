@@ -2,16 +2,18 @@
 Import-Module DnsServer
 
 # DNS server
-$Server = "savcone.local"
+$Server = 192.168.1.2
 
-# Import CSV
+# Import CSV (use "C:\Scripts\PtrRecords.csv" or your A records CSV)
 $Records = Import-Csv -Path "C:\Scripts\DNSRecords.csv"
+$Records = Import-Csv -Path "C:\Scripts\PTRRecords.csv"
+
 
 foreach ($Record in $Records) {
     # Check if record exists
     $Existing = Get-DnsServerResourceRecord -ZoneName $Record.ZoneName -Name $Record.Name -RRType $Record.Type -ComputerName $Server -ErrorAction SilentlyContinue
     if ($Existing) {
-        Write-Warning "Record $($$ Record.Name). $$($$ Record.ZoneName) ( $$($Record.Type)) already exists. Skipping."
+        Write-Warning "Record $($Record.Name).$($Record.ZoneName) ($($Record.Type)) already exists. Skipping."
         continue
     }
 
@@ -24,16 +26,15 @@ foreach ($Record in $Records) {
                                              -IPv4Address $Record.IPv4Address `
                                              -TimeToLive $Record.TTL
             }
-            "CNAME" {
-                Add-DnsServerResourceRecordCName -Name $Record.Name `
-                                                 -HostNameAlias $Record.Target `
-                                                 -ZoneName $Record.ZoneName `
-                                                 -ComputerName $Server `
-                                                 -TimeToLive $Record.TTL
+            "PTR" {
+                Add-DnsServerResourceRecordPtr -Name $Record.Name `
+                                               -ZoneName $Record.ZoneName `
+                                               -ComputerName $Server `
+                                               -PtrDomainName $Record.Target `
+                                               -TimeToLive $Record.TTL
             }
-            # Add cases for MX, PTR, etc.
         }
-        Write-Output "Record $($$ Record.Name). $$($$ Record.ZoneName) ( $$($Record.Type)) created."
+        Write-Output "Record $($Record.Name).$($Record.ZoneName) ($($Record.Type)) created."
     }
     catch {
         Write-Error "Failed to create $($Record.Name): $($_.Exception.Message)"
