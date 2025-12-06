@@ -1,0 +1,30 @@
+# Import CSV
+$Users = Import-Csv -Path "C:/Scripts/Users.csv"
+
+foreach ($User in $Users) {
+    # Check if user already exists
+    if (Get-ADUser -Filter {SamAccountName -eq $User.SamAccountName} -ErrorAction SilentlyContinue) {
+        Write-Warning "User $($User.SamAccountName) already exists. Skipping."
+        continue
+    }
+
+    # Create the user
+    try {
+        New-ADUser -Name "$($User.FirstName) $($User.LastName)" `
+                   -SamAccountName $User.SamAccountName `
+                   -GivenName $User.FirstName `
+                   -Surname $User.LastName `
+                   -Department $User.Department `
+                   -AccountPassword $DefaultPassword `
+                   -Enabled $true `
+                   -Path $User.OUPath `
+                   -ChangePasswordAtLogon $true
+
+        Write-Output "User $($User.SamAccountName) created successfully."
+    }
+    catch {
+        Write-Error "Failed to create $($User.SamAccountName): $($_.Exception.Message)"
+    }
+}
+
+Write-Output "Bulk user creation completed."
