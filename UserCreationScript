@@ -3,22 +3,18 @@ $Users = Import-Csv -Path "C:/Scripts/Users.csv"
 
 foreach ($User in $Users) {
     # Check if user already exists
-    if (Get-ADUser -Filter {SamAccountName -eq $User.SamAccountName} -ErrorAction SilentlyContinue) {
-        Write-Warning "User $($User.SamAccountName) already exists. Skipping."
+    if (Get-ADUser -Filter {DisplayName -eq $User.DisplayName} -ErrorAction SilentlyContinue) {
+        Write-Warning "User $($User.DisplayName) already exists. Skipping."
         continue
     }
 
     # Create the user
     try {
         New-ADUser -Name "$($User.FirstName) $($User.LastName)" `
-                   -SamAccountName $User.SamAccountName `
-                   -GivenName $User.FirstName `
-                   -Surname $User.LastName `
-                   -Department $User.Department `
-                   -AccountPassword $DefaultPassword `
+                   -AccountPassword $SavCone255! `
+                   -DisplayName "$($User.firstname) . $($User.lastname)"
                    -Enabled $true `
                    -Path $User.OUPath `
-                   -ChangePasswordAtLogon $true
 
         Write-Output "User $($User.SamAccountName) created successfully."
     }
