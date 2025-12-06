@@ -1,0 +1,5 @@
+FirstName,LastName,Username,Title,Role,OUPath
+Jayden,Falcone,jayden.falcone-adm,Admin,Administrator,"OU=Users,DC=savcone,DC=local"
+Logan,Savage,logan.savage-adm,Admin,Administrator,"OU=Users,DC=savcone,DC=local"
+Jayden,Falcone,jayden.falcone-usr,User,User,"OU=Users,DC=savcone,DC=local"
+Logan,Savage,jayden.falcone-usr,User,User,"OU=Users,DC=savcone,DC=local"
