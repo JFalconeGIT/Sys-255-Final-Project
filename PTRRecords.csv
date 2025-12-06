@@ -1,0 +1,6 @@
+Type,Name,ZoneName,Target,IPv4Address,TTL
+PTR,1,1.168.192.in-addr.arpa,fw-final.savcone.local,,01:00:00
+PTR,2,1.168.192.in-addr.arpa,ad-final.savcone.local,,01:00:00
+PTR,3,1.168.192.in-addr.arpa,dhcp-final.savcone.local,,01:00:00
+PTR,10,1.168.192.in-addr.arpa,wks-final.savcone.local,,01:00:00
+PTR,115,1.168.192.in-addr.arpa,web-final.savcone.local,,01:00:00
