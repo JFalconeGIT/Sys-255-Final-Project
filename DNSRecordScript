@@ -1,0 +1,43 @@
+# Import module
+Import-Module DnsServer
+
+# DNS server
+$Server = "savcone.local"
+
+# Import CSV
+$Records = Import-Csv -Path "C:\Scripts\DNSRecords.csv"
+
+foreach ($Record in $Records) {
+    # Check if record exists
+    $Existing = Get-DnsServerResourceRecord -ZoneName $Record.ZoneName -Name $Record.Name -RRType $Record.Type -ComputerName $Server -ErrorAction SilentlyContinue
+    if ($Existing) {
+        Write-Warning "Record $($$ Record.Name). $$($$ Record.ZoneName) ( $$($Record.Type)) already exists. Skipping."
+        continue
+    }
+
+    try {
+        switch ($Record.Type) {
+            "A" {
+                Add-DnsServerResourceRecordA -Name $Record.Name `
+                                             -ZoneName $Record.ZoneName `
+                                             -ComputerName $Server `
+                                             -IPv4Address $Record.IPv4Address `
+                                             -TimeToLive $Record.TTL
+            }
+            "CNAME" {
+                Add-DnsServerResourceRecordCName -Name $Record.Name `
+                                                 -HostNameAlias $Record.Target `
+                                                 -ZoneName $Record.ZoneName `
+                                                 -ComputerName $Server `
+                                                 -TimeToLive $Record.TTL
+            }
+            # Add cases for MX, PTR, etc.
+        }
+        Write-Output "Record $($$ Record.Name). $$($$ Record.ZoneName) ( $$($Record.Type)) created."
+    }
+    catch {
+        Write-Error "Failed to create $($Record.Name): $($_.Exception.Message)"
+    }
+}
+
+Write-Output "Bulk DNS creation completed."
