@@ -22,14 +22,12 @@ foreach ($Record in $Records) {
             "A" {
                 Add-DnsServerResourceRecordA -Name $Record.Name `
                                              -ZoneName $Record.ZoneName `
-                                             -ComputerName $Server `
                                              -IPv4Address $Record.IPv4Address `
                                              -TimeToLive $Record.TTL
             }
             "PTR" {
                 Add-DnsServerResourceRecordPtr -Name $Record.Name `
                                                -ZoneName $Record.ZoneName `
-                                               -ComputerName $Server `
                                                -PtrDomainName $Record.Target `
                                                -TimeToLive $Record.TTL
             }
